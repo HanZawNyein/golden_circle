@@ -1,6 +1,6 @@
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema import Schema
-from auth.context import get_context
+from .context import get_context
 from .query import Query
 from .mutation import Mutation
 

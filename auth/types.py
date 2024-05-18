@@ -6,7 +6,7 @@ from strawberry.fastapi import GraphQLRouter
 from strawberry.types import Info
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from auth.context import get_context, Context
+from graphql_services.context import get_context, Context
 from auth.crud import create_user, authenticate_user
 from auth.token import create_access_token
 
