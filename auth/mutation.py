@@ -13,7 +13,7 @@ from .types import User,Token
 @strawberry.type
 class AuthenticationMutation:
     @strawberry.mutation
-    async def register(self, username: str, password: str, info: Info) -> User:
+    async def register(self, username: str, password: str, info: strawberry.Info[Context]) -> User:
         db: AsyncSession = info.context.db
         user = await create_user(db, username, password)
         return User(id=user.id, username=user.username)
