@@ -16,6 +16,8 @@ class AuthenticationQuery:
     async def profile(self, info: strawberry.Info[Context]) -> Union[User, ErrorMessage]:
         db: AsyncSession = info.context.db
         user_id = info.context.user
+        if not user_id:
+            return ErrorMessage(message="Token is Invalid or Expired.")
         db_user: User = await get_user_by_id(db, id=user_id)
         if not db_user:
             return ErrorMessage(message="User profile not found.")
