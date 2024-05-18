@@ -14,4 +14,6 @@ class AuthenticationQuery:
         db: AsyncSession = info.context.db
         user_id = info.context.user
         user = get_user_by_id(db, id=user_id)
+        if not user:
+            raise ValueError("User profile not found")
         return user

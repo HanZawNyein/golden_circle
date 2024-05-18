@@ -1,4 +1,6 @@
 from functools import cached_property
+
+from passlib.exc import InvalidTokenError
 from strawberry.fastapi import BaseContext
 
 from auth.token import decode_access_token
@@ -13,11 +15,19 @@ class Context(BaseContext):
         authorization = self.request.headers.get("Authorization", None)
         if authorization:
             token = authorization.replace("Bearer ", "")
-            payload = decode_access_token(token)
-            if payload:
-                self.request.state.user = payload.get("sub")
-
-        return int(self.request.state.user)
+            try:
+                payload = decode_access_token(token)
+                if payload:
+                    user_id = payload.get("sub")
+                    self.request.state.user = user_id
+                    return int(user_id)
+            except InvalidTokenError as e:
+                # Handle invalid token error
+                # Return a default user ID or raise an error if user information is required
+                # return DEFAULT_USER_ID
+                # or
+                # raise ValueError("Authorization header or token payload is missing")
+                return None
 
     @cached_property
     def db(self):
@@ -28,4 +38,3 @@ class Context(BaseContext):
 
 async def get_context() -> Context:
     return Context()
-
