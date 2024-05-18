@@ -2,6 +2,7 @@ from typing import Optional
 
 import strawberry
 
+
 # Define Strawberry types
 @strawberry.type
 class Todo:

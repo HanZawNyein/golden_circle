@@ -1,7 +1,8 @@
-from fastapi.exceptions import HTTPException
-from typing import Union, List, Optional
+from typing import Union, List
 
 import strawberry
+from fastapi.exceptions import HTTPException
+
 from goldenCircle.exceptions import ErrorMessage
 from goldenCircle.graphql_services.context import Context
 from .todo_crud import get_todos, get_todo_by_id
@@ -24,4 +25,4 @@ class TodoQuery:
         todo = await get_todo_by_id(db, id)
         if not todo:
             raise HTTPException(status_code=404, detail="todo not found.")
-        return todo
+        return Todo(id=todo.id,title=todo.title,description=todo.description,completed=todo.completed)
