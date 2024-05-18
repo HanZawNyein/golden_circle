@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from typing import Union
+
 from auth.models import User
 from auth.token import (get_password_hash, verify_password)
 

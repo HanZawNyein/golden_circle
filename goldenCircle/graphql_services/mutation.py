@@ -1,7 +1,6 @@
 import strawberry
+
 from auth.mutation import AuthenticationMutation
-
-
 
 
 @strawberry.type

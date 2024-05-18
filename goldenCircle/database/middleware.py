@@ -1,7 +1,7 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-from database.base import SessionLocal
+from goldenCircle.database.base import SessionLocal
 
 
 class AddDbToRequestMiddleware(BaseHTTPMiddleware):

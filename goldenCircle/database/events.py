@@ -1,4 +1,4 @@
-from database.base import engine, Base
+from goldenCircle.database.base import engine, Base
 
 
 async def start_db():

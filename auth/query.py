@@ -1,10 +1,12 @@
+from typing import Union
+
 import strawberry
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Union
-from graphql_services.context import Context
+
+from goldenCircle.exceptions import ErrorMessage
+from goldenCircle.graphql_services.context import Context
 from .crud import get_user_by_id
 from .types import User
-from exceptions import ErrorMessage
 
 
 # Define GraphQL queries

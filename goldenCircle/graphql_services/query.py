@@ -1,4 +1,5 @@
 import strawberry
+
 from auth.query import AuthenticationQuery
 
 
