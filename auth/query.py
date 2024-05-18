@@ -1,19 +1,21 @@
 import strawberry
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from typing import Union
 from graphql_services.context import Context
 from .crud import get_user_by_id
 from .types import User
+from exceptions import ErrorMessage
 
 
 # Define GraphQL queries
 @strawberry.type
 class AuthenticationQuery:
     @strawberry.field
-    def profile(self, info: strawberry.Info[Context]) -> User:
+    async def profile(self, info: strawberry.Info[Context]) -> Union[User, ErrorMessage]:
         db: AsyncSession = info.context.db
         user_id = info.context.user
-        user = get_user_by_id(db, id=user_id)
-        if not user:
-            raise ValueError("User profile not found")
+        db_user: User = await get_user_by_id(db, id=user_id)
+        if not db_user:
+            return ErrorMessage(message="User profile not found.")
+        user = User(id=db_user.id, username=db_user.username)
         return user

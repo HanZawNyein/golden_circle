@@ -1,10 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from typing import Union
 from auth.models import User
 from auth.token import (get_password_hash, verify_password)
 
 
-async def get_user_by_id(db: AsyncSession, id: int):
+async def get_user_by_id(db: AsyncSession, id: int)->User|None:
     result = await db.execute(select(User).filter(User.id == id))
     return result.scalars().first()
 
@@ -30,7 +31,7 @@ async def authenticate_user(db: AsyncSession, username: str, password: str):
     return user
 
 
-async def change_password(db: AsyncSession, user_id: int, new_password: str)->bool:
+async def change_password(db: AsyncSession, user_id: int, new_password: str) -> bool:
     user = await get_user_by_id(db, user_id)
     if user:
         user.hashed_password = get_password_hash(new_password)
@@ -39,7 +40,7 @@ async def change_password(db: AsyncSession, user_id: int, new_password: str)->bo
     return False
 
 
-async def request_password_reset(db: AsyncSession, username: str)->bool:
+async def request_password_reset(db: AsyncSession, username: str) -> bool:
     user = await get_user_by_username(db, username)
     if user:
         # Implement logic to send password reset email
@@ -51,7 +52,7 @@ async def request_password_reset(db: AsyncSession, username: str)->bool:
     return False
 
 
-async def reset_password(db: AsyncSession, username: str, reset_token: str, new_password: str)->bool:
+async def reset_password(db: AsyncSession, username: str, reset_token: str, new_password: str) -> bool:
     user = await get_user_by_username(db, username)
     if user and user.reset_token == reset_token:
         user.hashed_password = get_password_hash(new_password)
