@@ -6,6 +6,7 @@ from fastapi.exceptions import HTTPException
 from goldenCircle.exceptions import ErrorMessage
 from goldenCircle.graphql_services.context import Context
 from .todo_crud import get_todos, get_todo_by_id
+from .todo_models import TodoModel
 from .todo_types import Todo
 
 
@@ -13,9 +14,9 @@ from .todo_types import Todo
 @strawberry.type
 class TodoQuery:
     @strawberry.field
-    async def allTodos(self, info: strawberry.Info[Context]) -> List[Todo]:
+    async def allTodos(self, info: strawberry.Info[Context], limit: int = 10, offset: int = 0) -> list[Todo]:
         db = info.context.db
-        todos = await get_todos(db)
+        todos = await get_todos(db, limit=limit, offset=offset)
         return todos
         # return [Todo(**todo.__dict__) for todo in todos]
 
@@ -25,4 +26,4 @@ class TodoQuery:
         todo = await get_todo_by_id(db, id)
         if not todo:
             raise HTTPException(status_code=404, detail="todo not found.")
-        return Todo(id=todo.id,title=todo.title,description=todo.description,completed=todo.completed)
+        return Todo(id=todo.id, title=todo.title, description=todo.description, completed=todo.completed)

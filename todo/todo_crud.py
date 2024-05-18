@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -5,8 +7,8 @@ from .todo_models import TodoModel
 from .todo_schemas import TodoCreate
 
 
-async def get_todos(db: AsyncSession):
-    result = await db.execute(select(TodoModel))
+async def get_todos(db: AsyncSession, limit: int, offset: int) -> List[TodoModel]:
+    result = await db.execute(select(TodoModel).offset(offset).limit(limit))
     return result.scalars().all()
 
 
@@ -14,9 +16,10 @@ async def get_todo_by_id(db: AsyncSession, todo_id: int):
     result = await db.execute(select(TodoModel).filter(TodoModel.id == todo_id))
     return result.scalars().first()
 
+
 #
 async def create_todo(db: AsyncSession, todo: TodoCreate):
-    db_todo = TodoModel(title=todo.title, description=todo.description,completed=todo.completed)
+    db_todo = TodoModel(title=todo.title, description=todo.description, completed=todo.completed)
     db.add(db_todo)
     await db.commit()
     await db.refresh(db_todo)
