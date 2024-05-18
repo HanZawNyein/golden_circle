@@ -3,12 +3,11 @@ from strawberry.fastapi import GraphQLRouter
 
 from auth.context import get_context
 from auth.query import AuthenticationQuery
-from auth.types import User
 from auth.mutation import AuthenticationMutation
-from strawberry.tools import merge_types
+from strawberry.tools import merge_types, create_type
 
 queries = AuthenticationQuery,
-ComboQuery = merge_types("ComboQuery", queries)
+ComboQuery = merge_types("Query", queries)
 
 # Create GraphQL schema
 schema = strawberry.Schema(query=ComboQuery, mutation=AuthenticationMutation)
