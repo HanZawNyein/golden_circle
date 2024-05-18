@@ -1,4 +1,4 @@
-from schema import graphql_app
+from graphql_services import graphql_app
 from fastapi import FastAPI
 from database.middleware import AddDbToRequestMiddleware
 from database.events import start_db
