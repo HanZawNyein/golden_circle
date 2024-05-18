@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from .todo_models import TodoModel
-from .todo_schemas import TodoCreate
+from .todo_types import TodoCreate, TodoUpdate
 
 
 async def get_todos(db: AsyncSession, limit: int, offset: int) -> List[TodoModel]:
@@ -25,18 +25,18 @@ async def create_todo(db: AsyncSession, todo: TodoCreate):
     await db.refresh(db_todo)
     return db_todo
 
-# async def update_todo(db: AsyncSession, todo_id: int, todo: TodoUpdate):
-#     db_todo = await get_todo_by_id(db, todo_id)
-#     if db_todo:
-#         if todo.title is not None:
-#             db_todo.title = todo.title
-#         if todo.description is not None:
-#             db_todo.description = todo.description
-#         if todo.completed is not None:
-#             db_todo.completed = todo.completed
-#         await db.commit()
-#         await db.refresh(db_todo)
-#     return db_todo
+async def update_todo(db: AsyncSession, todo_id: int, todo: TodoUpdate):
+    db_todo = await get_todo_by_id(db, todo_id)
+    if db_todo:
+        if todo.title is not None:
+            db_todo.title = todo.title
+        if todo.description is not None:
+            db_todo.description = todo.description
+        if todo.completed is not None:
+            db_todo.completed = todo.completed
+        await db.commit()
+        await db.refresh(db_todo)
+    return db_todo
 #
 # async def delete_todo(db: AsyncSession, todo_id: int):
 #     db_todo = await get_todo_by_id(db, todo_id)
