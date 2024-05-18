@@ -1,9 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
-
 import os
 from dotenv import load_dotenv
 

@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-import os
-from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env
+import os
 
 SECRET_KEY = os.getenv('secret_key')
 ALGORITHM = os.getenv('algorithm')

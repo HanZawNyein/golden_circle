@@ -1,12 +1,11 @@
 import strawberry
 from fastapi import HTTPException
-from strawberry.types import Info
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from graphql_services.context import get_context, Context
-from auth.crud import create_user, authenticate_user, get_user_by_username, request_password_reset, reset_password, \
+from graphql_services.context import Context
+from auth.crud import create_user, authenticate_user, request_password_reset, reset_password, \
     change_password
-from auth.token import create_access_token, verify_password
+from auth.token import create_access_token
 
 from .types import User, Token
 
