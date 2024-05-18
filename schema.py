@@ -1,13 +1,17 @@
 import strawberry
+from typing import List
+
+from fastapi import HTTPException
 from strawberry.fastapi import GraphQLRouter
-from fastapi import FastAPI, Depends
+from strawberry.types import Info
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
-from models import User as UserModel, TodoItem as TodoItemModel
-from crud import create_user, authenticate_user, get_todos, create_todo_item, update_todo_item, delete_todo_item
-from auth import create_access_token, decode_access_token
+
+from auth.context import get_context, Context
+from auth.crud import create_user, authenticate_user
+from auth.token import create_access_token
 
 
+# Define Strawberry types
 @strawberry.type
 class User:
     id: int
@@ -28,55 +32,41 @@ class Token:
     token_type: str
 
 
+# Define GraphQL queries
 @strawberry.type
 class Query:
     @strawberry.field
-    async def todos(self, info) -> list[TodoItem]:
-        db: AsyncSession = info.context["db"]
-        user_id = info.context["user_id"]
-        todos = await get_todos(db, user_id)
-        return [TodoItem(id=todo.id, title=todo.title, description=todo.description,
-                         owner=User(id=todo.owner.id, username=todo.owner.username)) for todo in todos]
+    async def todos(self, info: Info) -> List[TodoItem]:
+        db: AsyncSession = info.context.db
+        user_id = info.context.user
+        # todos = await get_todos(db, user_id)
+        return [
+            # TodoItem(
+            #     id=todo.id, title=todo.title, description=todo.description,
+            #     owner=User(id=todo.owner.id, username=todo.owner.username)
+            # ) for todo in todos
+        ]
 
 
+# Define GraphQL mutations
 @strawberry.type
 class Mutation:
     @strawberry.mutation
-    async def register(self, username: str, password: str, info) -> User:
-        db: AsyncSession = info.context["db"]
+    async def register(self, username: str, password: str, info: Info) -> User:
+        db: AsyncSession = info.context.db
         user = await create_user(db, username, password)
         return User(id=user.id, username=user.username)
 
     @strawberry.mutation
-    async def login(self, username: str, password: str, info) -> Token:
-        db: AsyncSession = info.context["db"]
+    async def login(self, username: str, password: str, info: strawberry.Info[Context]) -> Token:
+        db: AsyncSession = info.context.db
         user = await authenticate_user(db, username, password)
         if not user:
-            raise Exception("Invalid credentials")
-        access_token = create_access_token(data={"sub": user.username})
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+        access_token = create_access_token(data={"sub": str(user.id)})
         return Token(access_token=access_token, token_type="bearer")
 
-    @strawberry.mutation
-    async def create_todo_item(self, title: str, description: str, info) -> TodoItem:
-        db: AsyncSession = info.context["db"]
-        user_id = info.context["user_id"]
-        todo_item = await create_todo_item(db, title, description, user_id)
-        return TodoItem(id=todo_item.id, title=todo_item.title, description=todo_item.description,
-                        owner=User(id=todo_item.owner.id, username=todo_item.owner.username))
 
-    @strawberry.mutation
-    async def update_todo_item(self, id: int, title: str, description: str, info) -> TodoItem:
-        db: AsyncSession = info.context["db"]
-        todo_item = await update_todo_item(db, id, title, description)
-        return TodoItem(id=todo_item.id, title=todo_item.title, description=todo_item.description,
-                        owner=User(id=todo_item.owner.id, username=todo_item.owner.username))
-
-    @strawberry.mutation
-    async def delete_todo_item(self, id: int, info) -> bool:
-        db: AsyncSession = info.context["db"]
-        await delete_todo_item(db, id)
-        return True
-
-
+# Create GraphQL schema
 schema = strawberry.Schema(query=Query, mutation=Mutation)
-graphql_app = GraphQLRouter(schema)
+graphql_app = GraphQLRouter(schema, context_getter=get_context)
