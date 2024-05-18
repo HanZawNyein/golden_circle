@@ -32,7 +32,6 @@ class AuthenticationMutation:
         db: AsyncSession = info.context.db
         user_id = info.context.user
         user = await change_password(db, user_id, new_password)
-        print(user,user_id,db)
         if user:
             return "Password Change Successfully."
         else:
