@@ -1,6 +1,7 @@
 from typing import Optional
 
 import strawberry
+from fastapi import HTTPException
 
 from goldenCircle.graphql_services.context import Context
 from .todo_crud import create_todo, update_todo, delete_todo
@@ -34,9 +35,9 @@ class TodoMutation:
 
     @strawberry.mutation
     async def delete_todo(
-            self, id: int, info: strawberry.Info[Context], title: Optional[str] = None) -> str:
+            self, id: int, info: strawberry.Info[Context])-> str:
         db = info.context.db
         todo = await delete_todo(db, id)
         if not todo:
-            return "Deleted todo Success."
-        return "Deleted todo"
+            return "Todo not found."
+        return "Todo delete success."
