@@ -1,10 +1,11 @@
 from fastapi.exceptions import HTTPException
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from goldenCircle.types import ModelType
 
-async def readAll(db: AsyncSession, limit: int, offset: int, ModelClass):
+
+async def readAll(db: AsyncSession, limit: int, offset: int, ModelClass:ModelType):
     result = await db.execute(select(ModelClass).offset(offset).limit(limit))
     return result.scalars().all()
 

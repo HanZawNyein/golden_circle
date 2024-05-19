@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 
 import strawberry
 
@@ -7,7 +7,6 @@ from goldenCircle.graphql_services.context import Context
 
 from .todo_models import TodoModel
 from .todo_types import Todo
-
 
 # Define GraphQL mutations
 @strawberry.type
