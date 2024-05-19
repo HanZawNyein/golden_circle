@@ -1,9 +1,9 @@
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema import Schema
 
-from .context import get_context
-from .mutation import Mutation
-from .query import Query
+from goldenCircle.graphql_services.context import get_context
+from mutation import Mutation
+from query import Query
 
 # Create GraphQL schema
 schema = Schema(query=Query, mutation=Mutation)
