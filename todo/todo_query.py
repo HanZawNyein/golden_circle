@@ -17,7 +17,6 @@ class TodoQuery:
         db = info.context.db
         todos = await get_todos(db, limit=limit, offset=offset)
         return todos
-        # return [Todo(**todo.__dict__) for todo in todos]
 
     @strawberry.field
     async def getTodoById(self, id: int, info: strawberry.Info[Context]) -> Union[Todo | ErrorMessage]:

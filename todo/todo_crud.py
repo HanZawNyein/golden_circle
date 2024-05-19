@@ -16,25 +16,23 @@ async def get_todo_by_id(db: AsyncSession, todo_id: int):
     result = await db.execute(select(TodoModel).filter(TodoModel.id == todo_id))
     return result.scalars().first()
 
-async def create_todo(db: AsyncSession, todo: TodoCreate):
-    db_todo = TodoModel(title=todo.title, description=todo.description, completed=todo.completed)
+async def create_todo(db: AsyncSession, **kwargs):
+    db_todo = TodoModel(**kwargs)
     db.add(db_todo)
     await db.commit()
     await db.refresh(db_todo)
     return db_todo
 
-async def update_todo(db: AsyncSession, todo_id: int, todo: TodoUpdate):
+async def update_todo(db: AsyncSession, todo_id: int, **todo):
     db_todo = await get_todo_by_id(db, todo_id)
     if db_todo:
-        if todo.title is not None:
-            db_todo.title = todo.title
-        if todo.description is not None:
-            db_todo.description = todo.description
-        if todo.completed is not None:
-            db_todo.completed = todo.completed
+        for attr, value in todo.items():
+            if value is not None and hasattr(db_todo, attr):
+                setattr(db_todo, attr, value)
         await db.commit()
         await db.refresh(db_todo)
     return db_todo
+
 
 
 async def delete_todo(db: AsyncSession, todo_id: int):
