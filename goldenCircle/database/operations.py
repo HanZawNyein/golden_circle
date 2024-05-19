@@ -22,9 +22,18 @@ async def write(db: AsyncSession, db_id: int, ModelClass, **kwargs):
     if record:
         for attr, value in kwargs.items():
             if not hasattr(record, attr):
-                raise HTTPException(status_code=404, detail=f'{attr} Attribute does not exist. in <{ModelClass.__tablename__}> Model')
+                raise HTTPException(status_code=404,
+                                    detail=f'{attr} Attribute does not exist. in <{ModelClass.__tablename__}> Model')
             if value is not None and hasattr(record, attr):
                 setattr(record, attr, value)
         await db.commit()
         await db.refresh(record)
+    return record
+
+
+async def create(db: AsyncSession, ModelClass, **kwargs: dict):
+    record = ModelClass(**kwargs)
+    db.add(record)
+    await db.commit()
+    await db.refresh(record)
     return record

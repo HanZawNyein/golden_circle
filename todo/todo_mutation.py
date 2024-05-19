@@ -15,10 +15,16 @@ from .todo_types import Todo, TodoCreate, TodoUpdate
 class TodoMutation:
     @strawberry.mutation
     async def create_todo(
-            self, info: strawberry.Info[Context], title: str, description: Optional[str] = None,
+            self, info: strawberry.Info[Context],
+            title: str,
+            description: Optional[str] = None,
             completed: bool = False) -> Todo:
-        db = info.context.db
-        todo = await create_todo(db, title=title, description=description, completed=completed)
+        kwargs = {
+            "title": title,
+            "description": description,
+            "completed": completed,
+        }
+        todo = await operations.create(info.context.db, TodoModel, **kwargs)
         return todo
 
     @strawberry.mutation
