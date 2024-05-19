@@ -1,6 +1,7 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
+
 import strawberry
-from strawberry.types import Info
+
 
 @strawberry.input
 class FieldInput:

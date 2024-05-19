@@ -1,8 +1,7 @@
 import strawberry
 
-from goldenCircle.graphql_services.context import Context
 from goldenCircle.database import operations
-
+from goldenCircle.graphql_services.context import Context
 from .todo_models import TodoModel
 from .todo_types import Todo
 

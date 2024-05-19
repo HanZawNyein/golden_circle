@@ -1,13 +1,11 @@
-from typing import Optional, Any
+from typing import Optional
 
 import strawberry
-from fastapi import HTTPException
 
-from goldenCircle.graphql_services.context import Context
 from goldenCircle.database import operations
-from .todo_crud import create_todo, update_todo, delete_todo
+from goldenCircle.graphql_services.context import Context
 from .todo_models import TodoModel
-from .todo_types import Todo, TodoCreate, TodoUpdate
+from .todo_types import Todo
 
 
 # Define GraphQL mutations
