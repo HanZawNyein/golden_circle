@@ -17,6 +17,5 @@ class TodoQuery:
 
     @strawberry.field
     async def get_todo_by_id(self, id: int, info: strawberry.Info[Context]) -> Todo:
-        db = info.context.db
-        todo = await db_crud.readById(db, id, ModelClass=TodoModel)
+        todo = await db_crud.readById(info.context.db, id, ModelClass=TodoModel)
         return todo
