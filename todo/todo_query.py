@@ -11,19 +11,16 @@ from .todo_models import TodoModel
 from .todo_types import Todo
 
 
-
 # Define GraphQL queries
 @strawberry.type
 class TodoQuery:
     @strawberry.field
     async def allTodos(self, info: strawberry.Info[Context], limit: int = 10, offset: int = 0) -> list[Todo]:
-        todos = await db_crud.readAll(info.context.db, limit, offset,ModelClass=TodoModel)
+        todos = await db_crud.readAll(info.context.db, limit, offset, ModelClass=TodoModel)
         return todos
 
     @strawberry.field
-    async def getTodoById(self, id: int, info: strawberry.Info[Context]) -> Union[Todo | ErrorMessage]:
+    async def getTodoById(self, id: int, info: strawberry.Info[Context]) -> Todo:
         db = info.context.db
-        todo = await get_todo_by_id(db, id)
-        if not todo:
-            raise HTTPException(status_code=404, detail="todo not found.")
-        return Todo(id=todo.id, title=todo.title, description=todo.description, completed=todo.completed)
+        todo = await db_crud.readById(db, id, ModelClass=TodoModel)
+        return todo
