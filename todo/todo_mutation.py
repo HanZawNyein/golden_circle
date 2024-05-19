@@ -45,6 +45,6 @@ class TodoMutation:
 
     @strawberry.mutation
     async def delete_todo(
-            self, id: int, info: strawberry.Info[Context]) -> bool:
+            self, id: int, info: strawberry.Info[Context]) -> str:
         await operations.delete(info.context.db, id, TodoModel)
         return "Todo delete success."
