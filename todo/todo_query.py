@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union
 
 import strawberry
 from fastapi.exceptions import HTTPException
@@ -6,7 +6,6 @@ from fastapi.exceptions import HTTPException
 from goldenCircle.exceptions import ErrorMessage
 from goldenCircle.graphql_services.context import Context
 from .todo_crud import get_todos, get_todo_by_id
-from .todo_models import TodoModel
 from .todo_types import Todo
 
 
