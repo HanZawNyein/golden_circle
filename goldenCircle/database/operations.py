@@ -15,3 +15,16 @@ async def readById(db: AsyncSession, db_id: int, ModelClass):
     if not record:
         raise HTTPException(status_code=404, detail="Record Not Found.")
     return record
+
+
+async def write(db: AsyncSession, db_id: int, ModelClass, **kwargs):
+    record = await readById(db, db_id, ModelClass=ModelClass)
+    if record:
+        for attr, value in kwargs.items():
+            if not hasattr(record, attr):
+                raise HTTPException(status_code=404, detail=f'{attr} Attribute does not exist. in <{ModelClass.__tablename__}> Model')
+            if value is not None and hasattr(record, attr):
+                setattr(record, attr, value)
+        await db.commit()
+        await db.refresh(record)
+    return record
