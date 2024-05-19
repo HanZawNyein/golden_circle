@@ -1,3 +1,5 @@
+from typing import List
+
 import strawberry
 
 from goldenCircle.database import operations
@@ -5,8 +7,7 @@ from goldenCircle.graphql_services.context import Context
 from .todo_models import TodoModel
 from .todo_types import Todo
 
-
-# Define GraphQL queries
+    # # Define GraphQL queries
 @strawberry.type
 class TodoQuery:
     @strawberry.field

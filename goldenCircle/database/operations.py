@@ -10,7 +10,7 @@ async def readAll(db: AsyncSession, limit: int, offset: int, ModelClass:ModelTyp
     return result.scalars().all()
 
 
-async def readById(db: AsyncSession, db_id: int, ModelClass):
+async def readById(db: AsyncSession, db_id: int, ModelClass:ModelType):
     result = await db.execute(select(ModelClass).filter(ModelClass.id == db_id))
     record = result.scalars().first()
     if not record:
@@ -18,7 +18,7 @@ async def readById(db: AsyncSession, db_id: int, ModelClass):
     return record
 
 
-async def write(db: AsyncSession, db_id: int, ModelClass, **kwargs):
+async def write(db: AsyncSession, db_id: int, ModelClass:ModelType, **kwargs):
     record = await readById(db, db_id, ModelClass=ModelClass)
     if record:
         for attr, value in kwargs.items():
@@ -32,7 +32,7 @@ async def write(db: AsyncSession, db_id: int, ModelClass, **kwargs):
     return record
 
 
-async def create(db: AsyncSession, ModelClass, **kwargs: dict):
+async def create(db: AsyncSession, ModelClass:ModelType, **kwargs: dict):
     record = ModelClass(**kwargs)
     db.add(record)
     await db.commit()
@@ -40,7 +40,7 @@ async def create(db: AsyncSession, ModelClass, **kwargs: dict):
     return record
 
 
-async def delete(db: AsyncSession, db_id: int,ModelClass):
+async def delete(db: AsyncSession, db_id: int,ModelClass:ModelType):
     record = await readById(db, db_id, ModelClass=ModelClass)
     if record:
         await db.delete(record)
