@@ -8,4 +8,3 @@ from todo.todo_mutation import TodoMutation
 class Mutation:
     auth: AuthenticationMutation = strawberry.mutation(lambda: AuthenticationMutation())
     todo: TodoMutation = strawberry.mutation(lambda: TodoMutation())
-

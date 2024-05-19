@@ -5,7 +5,7 @@ from auth.models import User
 from auth.token import (get_password_hash, verify_password)
 
 
-async def get_user_by_id(db: AsyncSession, id: int)->User|None:
+async def get_user_by_id(db: AsyncSession, id: int) -> User | None:
     result = await db.execute(select(User).filter(User.id == id))
     return result.scalars().first()
 

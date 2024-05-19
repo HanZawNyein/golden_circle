@@ -11,6 +11,7 @@ class AddDbToRequestMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
             return response
 
+
 async def get_db():
     async with SessionLocal() as session:
         yield session

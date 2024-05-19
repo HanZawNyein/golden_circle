@@ -5,12 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from goldenCircle.types import ModelType
 
 
-async def readAll(db: AsyncSession, limit: int, offset: int, ModelClass:ModelType):
+async def readAll(db: AsyncSession, limit: int, offset: int, ModelClass: ModelType):
     result = await db.execute(select(ModelClass).offset(offset).limit(limit))
     return result.scalars().all()
 
 
-async def readById(db: AsyncSession, db_id: int, ModelClass:ModelType):
+async def readById(db: AsyncSession, db_id: int, ModelClass: ModelType):
     result = await db.execute(select(ModelClass).filter(ModelClass.id == db_id))
     record = result.scalars().first()
     if not record:
@@ -18,7 +18,7 @@ async def readById(db: AsyncSession, db_id: int, ModelClass:ModelType):
     return record
 
 
-async def write(db: AsyncSession, db_id: int, ModelClass:ModelType, **kwargs):
+async def write(db: AsyncSession, db_id: int, ModelClass: ModelType, **kwargs):
     record = await readById(db, db_id, ModelClass=ModelClass)
     if record:
         for attr, value in kwargs.items():
@@ -32,7 +32,7 @@ async def write(db: AsyncSession, db_id: int, ModelClass:ModelType, **kwargs):
     return record
 
 
-async def create(db: AsyncSession, ModelClass:ModelType, **kwargs: dict):
+async def create(db: AsyncSession, ModelClass: ModelType, **kwargs: dict):
     record = ModelClass(**kwargs)
     db.add(record)
     await db.commit()
@@ -40,7 +40,7 @@ async def create(db: AsyncSession, ModelClass:ModelType, **kwargs: dict):
     return record
 
 
-async def delete(db: AsyncSession, db_id: int,ModelClass:ModelType):
+async def delete(db: AsyncSession, db_id: int, ModelClass: ModelType):
     record = await readById(db, db_id, ModelClass=ModelClass)
     if record:
         await db.delete(record)

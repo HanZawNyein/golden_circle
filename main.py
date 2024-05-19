@@ -1,12 +1,8 @@
 from fastapi import FastAPI
 
+from app import graphql_app
 from goldenCircle.database.events import start_db
 from goldenCircle.database.middleware import AddDbToRequestMiddleware
-from app import graphql_app
-
-# Replace the mutation schema with the updated Mutation class
-# graphql_app.schema.mutation.todo = strawberry.mutation(lambda: TodoMutation())
-# graphql_app.schema.query.todo: TodoQuery = strawberry.field(lambda: TodoQuery())
 
 app = FastAPI()
 
