@@ -47,8 +47,5 @@ class TodoMutation:
     @strawberry.mutation
     async def delete_todo(
             self, id: int, info: strawberry.Info[Context]) -> str:
-        db = info.context.db
-        todo = await delete_todo(db, id)
-        if not todo:
-            return "Todo not found."
+        await operations.delete(info.context.db, id,TodoModel)
         return "Todo delete success."

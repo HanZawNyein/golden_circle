@@ -37,3 +37,12 @@ async def create(db: AsyncSession, ModelClass, **kwargs: dict):
     await db.commit()
     await db.refresh(record)
     return record
+
+
+async def delete(db: AsyncSession, db_id: int,ModelClass):
+    record = await readById(db, db_id, ModelClass=ModelClass)
+    if record:
+        await db.delete(record)
+        await db.commit()
+        return True
+    return False
